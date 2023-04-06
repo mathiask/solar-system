@@ -34,7 +34,7 @@
 
   const planets = [
       {pos: [500, 300], v: [0, -2], color: "blue" , trace: []},
-      {pos: [500, 300], v: [0, -1], color: "green", trace: []},
+      {pos: [500, 300], v: [0, -1.5], color: "green", trace: []},
       {pos: [400, 300], v: [0, -3], color: "red"  , trace: []},
   ];
 
@@ -52,7 +52,7 @@
       for (let p of ps) {
 	  drawBody(ctx, p.pos, 5, p.color);
 	  for (let pt of p.trace) {
-	      drawBody(ctx, pt, 2, p.color);
+	      drawBody(ctx, pt, 1, p.color);
 	  }
       }
   }
@@ -69,7 +69,7 @@
 
   function trace(p) {
       p.trace.push(p.pos);
-      if (p.trace.length > 50) {
+      if (p.trace.length > 150) {
 	  p.trace.shift();
       }
   }
