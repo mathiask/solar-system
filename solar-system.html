@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<!-- <link href="css/some-stylesheet.css" -->
+<!--       rel="stylesheet"/> -->
+<!-- <script src="scripts/some-script.js"> -->
+<!-- </script> -->
+</head>
+<body>
+  <h1>Solar System Simulator</h1>
+  <canvas id="canvas" style="border: 1px solid" width="600" height="600"></canvas>
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  function drawSun(ctx) {
+      drawBody(ctx, [300,300], 20, "orange")
+      ctx.beginPath();
+      ctx.arc(300, 300, 20, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fillStyle = "orange";
+      ctx.fill();
+  }
+
+  function drawBody(ctx, pos, r, color) {
+      ctx.beginPath();
+      ctx.arc(pos[0], pos[1], r, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+  }
+
+  const planet = {
+      pos: [500,300],
+      v: [0,0]
+  }
+
+  setInterval(draw, 100);
+
+  function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawSun(ctx);
+      drawBody(ctx, planet.pos, 5, "blue");
+      planet.pos[1]++;
+  }
+
+
+
+</script>
+</body>
+</html>
