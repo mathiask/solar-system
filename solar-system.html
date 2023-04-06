@@ -32,19 +32,30 @@
       ctx.fill();
   }
 
-  const planet = {
-      pos: [500, 300],
-      v: [0, -2]
-  }
+  const planets = [
+      {pos: [500, 300], v: [0, -2], color: "blue"},
+      {pos: [500, 300], v: [0, -1], color: "green"},
+      {pos: [400, 300], v: [0, -3], color: "red"},
+  ];
 
-  setInterval(draw, 100);
+  setInterval(draw, 10);
 
   function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSun(ctx);
-      drawBody(ctx, planet.pos, 5, "blue");
-      update(planet);
-      console.log(planet);
+      drawPlanets(planets);
+      updateAll(planets);
+      //console.log(planet);
+  }
+
+  function drawPlanets(ps) {
+      for (let p of ps) {
+	  drawBody(ctx, p.pos, 5, p.color);
+      }
+  }
+
+  function updateAll(ps) {
+      for (p of ps) update(p);
   }
 
   function update(p) {
