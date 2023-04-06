@@ -13,9 +13,10 @@
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
+  const sunPos = [300, 300];
 
   function drawSun(ctx) {
-      drawBody(ctx, [300,300], 20, "orange")
+      drawBody(ctx, sunPos, 20, "orange")
       ctx.beginPath();
       ctx.arc(300, 300, 20, 0, Math.PI * 2, true);
       ctx.closePath();
@@ -32,8 +33,8 @@
   }
 
   const planet = {
-      pos: [500,300],
-      v: [0,0]
+      pos: [500, 300],
+      v: [0, -2]
   }
 
   setInterval(draw, 100);
@@ -42,7 +43,56 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSun(ctx);
       drawBody(ctx, planet.pos, 5, "blue");
-      planet.pos[1]++;
+      update(planet);
+      console.log(planet);
+  }
+
+  function update(p) {
+      updateV(p);
+      updatePos(p);
+  }
+
+  function updateV(p) {
+      p.v = vecPlus(p.v, acc(p));
+  }
+
+  /**
+   * F = ma
+   * F = (G m m_S)/r^2 = Cm/r^2 (C = G m_S)
+   * a = F/m = C/r^2
+   */
+  function acc(p) {
+      let ps = vecMinus(sunPos, p.pos);
+      let ad = vecNorm(ps);
+      return vecScale(ad, 1000 / vecLength(ps)**2);
+  }
+
+  function vecMinus(v1, v2) {
+      return vecPlus(v1, vecNeg(v2));
+  }
+
+  function vecNeg(v) {
+      return [-v[0], -v[1]];
+  }
+
+  function vecPlus(v1, v2) {
+      return [v1[0] + v2[0] , v1[1] + v2[1]];
+  }
+
+  function vecNorm(v) {
+      return vecScale(v, 1 / vecLength(v));
+  }
+
+  function vecLength(v) {
+      return Math.sqrt(v[0]*v[0] + v[1]*v[1]);
+  }
+
+  function vecScale(v, x) {
+      return [x * v[0], x * v[1]];
+  }
+
+  function updatePos(p) {
+      p.pos = vecPlus(p.pos, p.v);
   }
 
 
