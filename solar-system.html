@@ -10,6 +10,7 @@
 <body>
   <h1>Solar System Simulator</h1>
   <canvas id="canvas" style="border: 1px solid" width="600" height="600"></canvas>
+  DeltaV <input type='number' id='dv' value='0.1'><button id='launch'>Launch</button>
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -34,8 +35,9 @@
 
   const planets = [
       {pos: [500, 300], v: [0, -2], color: "blue" , trace: []},
-      {pos: [500, 300], v: [0, -1.5], color: "green", trace: []},
+      {pos: [500, 300], v: [0, -1.1], color: "green", trace: []},
       {pos: [400, 300], v: [0, -3], color: "red"  , trace: []},
+      {pos: [580, 300], v: [0, -1.9], color: "#cc00cc"  , trace: []},
   ];
 
   setInterval(draw, 10);
@@ -117,7 +119,21 @@
       p.pos = vecPlus(p.pos, p.v);
   }
 
+  document.getElementById('launch').addEventListener('click', launchClicked);
 
+  function launchClicked() {
+      launch(0, readDv());
+  }
+
+  function readDv() {
+      return parseFloat(document.getElementById('dv').value);
+  }
+
+  function launch(from, dv) {
+      let p = planets[from];
+      let v = vecScale(p.v, (vecLength(p.v) + dv) / vecLength(p.v));
+      planets.push({pos: p.pos, v, color: 'black', trace: []});
+  }
 
 </script>
 </body>
