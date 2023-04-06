@@ -10,11 +10,21 @@
 <body>
   <h1>Solar System Simulator</h1>
   <canvas id="canvas" style="border: 1px solid" width="600" height="600"></canvas>
-  DeltaV <input type='number' id='dv' value='0.1'><button id='launch'>Launch</button>
+  <p>
+    DeltaV <input type='number' id='dv' value='0.1'><button id='launch'>Launch</button>
+    Target: <input type='number' id='target' value='3'> (blue, green, red, purple)
+  </p>
+  <p>
+    Dist: <span id='d'></span>
+  </p>
+  <p>
+    Min.Dist: <span id='mind'></span>
+  </p>
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const sunPos = [300, 300];
+  var minDist, target;
 
   function drawSun(ctx) {
       drawBody(ctx, sunPos, 20, "orange")
@@ -52,10 +62,10 @@
 
   function drawPlanets(ps) {
       for (let p of ps) {
-	  drawBody(ctx, p.pos, 5, p.color);
-	  for (let pt of p.trace) {
-	      drawBody(ctx, pt, 1, p.color);
-	  }
+          drawBody(ctx, p.pos, 5, p.color);
+          for (let pt of p.trace) {
+              drawBody(ctx, pt, 1, p.color);
+          }
       }
   }
 
@@ -67,12 +77,22 @@
       trace(p);
       updateV(p);
       updatePos(p);
+      if (p.ship) {
+          let d = vecDist(p.pos, planets[target].pos)
+          minDist = Math.min(minDist, d);
+          show('d', d);
+          show('mind', minDist);
+      }
+  }
+
+  function show(id, txt) {
+      document.getElementById(id).innerHTML = txt;
   }
 
   function trace(p) {
       p.trace.push(p.pos);
       if (p.trace.length > 150) {
-	  p.trace.shift();
+          p.trace.shift();
       }
   }
 
@@ -130,9 +150,17 @@
   }
 
   function launch(from, dv) {
+      // drop previously launched ship
+      if (planets.slice(-1)[0].ship) planets.pop();
       let p = planets[from];
       let v = vecScale(p.v, (vecLength(p.v) + dv) / vecLength(p.v));
-      planets.push({pos: p.pos, v, color: 'black', trace: []});
+      target = parseInt(document.getElementById('target').value);
+      minDist = vecDist(p.pos, planets[target].pos);
+      planets.push({pos: p.pos, v, color: 'black', trace: [], ship: true});
+  }
+
+  function vecDist(v1, v2) {
+      return vecLength(vecMinus(v1, v2));
   }
 
 </script>
