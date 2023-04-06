@@ -33,9 +33,9 @@
   }
 
   const planets = [
-      {pos: [500, 300], v: [0, -2], color: "blue"},
-      {pos: [500, 300], v: [0, -1], color: "green"},
-      {pos: [400, 300], v: [0, -3], color: "red"},
+      {pos: [500, 300], v: [0, -2], color: "blue" , trace: []},
+      {pos: [500, 300], v: [0, -1], color: "green", trace: []},
+      {pos: [400, 300], v: [0, -3], color: "red"  , trace: []},
   ];
 
   setInterval(draw, 10);
@@ -51,6 +51,9 @@
   function drawPlanets(ps) {
       for (let p of ps) {
 	  drawBody(ctx, p.pos, 5, p.color);
+	  for (let pt of p.trace) {
+	      drawBody(ctx, pt, 2, p.color);
+	  }
       }
   }
 
@@ -59,8 +62,16 @@
   }
 
   function update(p) {
+      trace(p);
       updateV(p);
       updatePos(p);
+  }
+
+  function trace(p) {
+      p.trace.push(p.pos);
+      if (p.trace.length > 50) {
+	  p.trace.shift();
+      }
   }
 
   function updateV(p) {
