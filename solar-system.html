@@ -28,11 +28,6 @@
 
   function drawSun(ctx) {
       drawBody(ctx, sunPos, 20, "orange")
-      ctx.beginPath();
-      ctx.arc(300, 300, 20, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fillStyle = "orange";
-      ctx.fill();
   }
 
   function drawBody(ctx, pos, r, color) {
