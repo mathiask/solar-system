@@ -23,7 +23,7 @@
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-  const sunMassFactor = 10;
+  const sunMassFactor = 2;
   var minDist, target;
 
   function drawBody(ctx, pos, r, color) {
@@ -35,12 +35,12 @@
   }
 
   const planets = [
-      {pos: [350, 350], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
+      {pos: [500, 500], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
       {pos: [550, 550], v: [3.2, -3.2], color: "#ffcc00", trace: [], sun: true, r:20},
-      {pos: [550, 350], v: [0, -2], color: "blue", trace: []},
-      {pos: [550, 350], v: [0, -1.1], color: "green", trace: []},
-      {pos: [450, 350], v: [0, -3], color: "red", trace: []},
-      {pos: [630, 350], v: [0, -1.9], color: "#cc00cc", trace: []},
+      {pos: [800, 500], v: [0, -2], color: "blue", trace: []},
+      {pos: [800, 500], v: [0, -1.1], color: "green", trace: []},
+      {pos: [700, 500], v: [0, -3], color: "red", trace: []},
+      {pos: [880, 500], v: [0, -1.9], color: "#cc00cc", trace: []},
   ];
 
   setInterval(draw, 20);
@@ -62,6 +62,7 @@
 
   function updateAll(ps) {
       for (p of ps) {
+	  if (p === planets[0]) continue;
           update(p);
       }
   }
