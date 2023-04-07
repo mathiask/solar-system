@@ -9,7 +9,7 @@
 </head>
 <body>
   <h1>Solar System Simulator</h1>
-  <canvas id="canvas" style="border: 1px solid" width="600" height="600"></canvas>
+  <canvas id="canvas" style="border: 1px solid" width="1000" height="1000"></canvas>
   <p>
     DeltaV <input type='number' id='dv' value='0.1'><button id='launch'>Launch</button>
     Target: <input type='number' id='target' value='3'> (blue, green, red, purple)
@@ -23,17 +23,8 @@
 <script>
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-  const sunPos = [300, 300];
+  const sunMassFactor = 10;
   var minDist, target;
-
-  function drawSun(ctx) {
-      drawBody(ctx, sunPos, 20, "orange")
-      ctx.beginPath();
-      ctx.arc(300, 300, 20, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fillStyle = "orange";
-      ctx.fill();
-  }
 
   function drawBody(ctx, pos, r, color) {
       ctx.beginPath();
@@ -44,25 +35,25 @@
   }
 
   const planets = [
-      {pos: [500, 300], v: [0, -2], color: "blue" , trace: []},
-      {pos: [500, 300], v: [0, -1.1], color: "green", trace: []},
-      {pos: [400, 300], v: [0, -3], color: "red"  , trace: []},
-      {pos: [580, 300], v: [0, -1.9], color: "#cc00cc"  , trace: []},
+      {pos: [350, 350], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
+      {pos: [550, 550], v: [3.2, -3.2], color: "#ffcc00", trace: [], sun: true, r:20},
+      {pos: [550, 350], v: [0, -2], color: "blue", trace: []},
+      {pos: [550, 350], v: [0, -1.1], color: "green", trace: []},
+      {pos: [450, 350], v: [0, -3], color: "red", trace: []},
+      {pos: [630, 350], v: [0, -1.9], color: "#cc00cc", trace: []},
   ];
 
-  setInterval(draw, 10);
+  setInterval(draw, 20);
 
   function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawSun(ctx);
       drawPlanets(planets);
       updateAll(planets);
-      //console.log(planet);
   }
 
   function drawPlanets(ps) {
       for (let p of ps) {
-          drawBody(ctx, p.pos, 5, p.color);
+          drawBody(ctx, p.pos, p.r, p.color);
           for (let pt of p.trace) {
               drawBody(ctx, pt, 1, p.color);
           }
@@ -70,7 +61,9 @@
   }
 
   function updateAll(ps) {
-      for (p of ps) update(p);
+      for (p of ps) {
+          update(p);
+      }
   }
 
   function update(p) {
@@ -97,7 +90,11 @@
   }
 
   function updateV(p) {
-      p.v = vecPlus(p.v, acc(p));
+      for (let q of planets) {
+          if (p !== q && q.sun) {
+              p.v = vecPlus(p.v, acc(p.pos, q.pos, p.sun ? sunMassFactor : 1));
+          }
+      }
   }
 
   /**
@@ -105,10 +102,10 @@
    * F = (G m m_S)/r^2 = Cm/r^2 (C = G m_S)
    * a = F/m = C/r^2
    */
-  function acc(p) {
-      let ps = vecMinus(sunPos, p.pos);
+  function acc(p, q, m) {
+      let ps = vecMinus(q, p);
       let ad = vecNorm(ps);
-      return vecScale(ad, 1000 / vecLength(ps)**2);
+      return vecScale(ad, m * 1000 / vecLength(ps)**2);
   }
 
   function vecMinus(v1, v2) {
