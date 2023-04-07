@@ -9,7 +9,8 @@
 </head>
 <body>
   <h1>Solar System Simulator</h1>
-  <canvas id="canvas" style="border: 1px solid" width="1000" height="1000"></canvas>
+  <canvas id="canvas" style="border: 1px solid" width="800" height="800"></canvas>
+  Scale (log_2): <input type='number' id='scale' value='0'>
   <p>
     DeltaV <input type='number' id='dv' value='0.1'><button id='launch'>Launch</button>
     Target: <input type='number' id='target' value='3'> (blue, green, red, purple)
@@ -26,21 +27,13 @@
   const sunMassFactor = 2;
   var minDist, target;
 
-  function drawBody(ctx, pos, r, color) {
-      ctx.beginPath();
-      ctx.arc(pos[0], pos[1], r, 0, Math.PI * 2, true);
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-  }
-
   const planets = [
-      {pos: [500, 500], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
-      {pos: [550, 550], v: [3.2, -3.2], color: "#ffcc00", trace: [], sun: true, r:20},
-      {pos: [800, 500], v: [0, -2.2], color: "blue", trace: []},
-      {pos: [800, 500], v: [0, -1.7], color: "green", trace: []},
-      {pos: [700, 500], v: [0, -3], color: "red", trace: []},
-      {pos: [880, 500], v: [0, -1.9], color: "#cc00cc", trace: []},
+      {pos: [0, 0], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
+      {pos: [50, 50], v: [3.2, -3.2], color: "#ffcc00", trace: [], sun: true, r:20},
+      {pos: [300, 0], v: [0, -2.2], color: "blue", trace: []},
+      {pos: [300, 0], v: [0, -1.7], color: "green", trace: []},
+      {pos: [200, 0], v: [0, -3], color: "red", trace: []},
+      {pos: [380, 0], v: [0, -1.9], color: "#cc00cc", trace: []},
   ];
 
   setInterval(draw, 20);
@@ -58,6 +51,16 @@
               drawBody(ctx, pt, 1, p.color);
           }
       }
+  }
+
+  function drawBody(ctx, pos, r, color) {
+      let s = 2**parseFloat(document.getElementById('scale').value);
+      let mxy = canvas.width / 2;
+      ctx.beginPath();
+      ctx.arc(s * pos[0] + mxy, s * pos[1] + mxy, Math.max(r == 1 ? 1 : 2, r * s), 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
   }
 
   function updateAll(ps) {
