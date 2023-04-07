@@ -37,8 +37,8 @@
   const planets = [
       {pos: [500, 500], v: [-3.2, 3.2], color: "orange", trace: [], sun: true, r: 20},
       {pos: [550, 550], v: [3.2, -3.2], color: "#ffcc00", trace: [], sun: true, r:20},
-      {pos: [800, 500], v: [0, -2], color: "blue", trace: []},
-      {pos: [800, 500], v: [0, -1.1], color: "green", trace: []},
+      {pos: [800, 500], v: [0, -2.2], color: "blue", trace: []},
+      {pos: [800, 500], v: [0, -1.7], color: "green", trace: []},
       {pos: [700, 500], v: [0, -3], color: "red", trace: []},
       {pos: [880, 500], v: [0, -1.9], color: "#cc00cc", trace: []},
   ];
@@ -140,7 +140,7 @@
   document.getElementById('launch').addEventListener('click', launchClicked);
 
   function launchClicked() {
-      launch(0, readDv());
+      launch(2, readDv());
   }
 
   function readDv() {
