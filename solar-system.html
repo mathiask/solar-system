@@ -45,19 +45,20 @@
   }
 
   function drawPlanets(ps) {
+      center = [(ps[0].pos[0] + ps[1].pos[0]) / 2, (ps[0].pos[1] + ps[1].pos[1]) / 2]
       for (let p of ps) {
-          drawBody(ctx, p.pos, p.r, p.color);
+          drawBody(ctx, p.pos, p.r, p.color, center);
           for (let pt of p.trace) {
-              drawBody(ctx, pt, 1, p.color);
+              drawBody(ctx, pt, 1, p.color, center);
           }
       }
   }
 
-  function drawBody(ctx, pos, r, color) {
+  function drawBody(ctx, pos, r, color, center) {
       let s = 2**parseFloat(document.getElementById('scale').value);
       let mxy = canvas.width / 2;
       ctx.beginPath();
-      ctx.arc(s * pos[0] + mxy, s * pos[1] + mxy, Math.max(r == 1 ? 1 : 2, r * s), 0, Math.PI * 2, true);
+      ctx.arc(s * (pos[0] - center[0]) + mxy, s * (pos[1] - center[1]) + mxy, Math.max(r == 1 ? 1 : 2, r * s), 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.fillStyle = color;
       ctx.fill();
